@@ -61,6 +61,10 @@ object Libs {
         const val mockk = "io.mockk:mockk:1.11.0"
     }
 
+    object Kotlinx {
+        const val datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.2.1"
+    }
+
     object Hilt {
         private const val version = "2.37"
         private const val miscVersion = "1.0.0-alpha03"

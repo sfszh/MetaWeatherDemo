@@ -1,3 +1,5 @@
+import co.ruizhang.buildsrc.Libs
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -42,73 +44,75 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = co.ruizhang.buildsrc.Libs.AndroidX.Compose.version
+        kotlinCompilerExtensionVersion = Libs.AndroidX.Compose.version
         kotlinCompilerVersion = "1.4.32"
     }
 }
 dependencies {
 
-    implementation(co.ruizhang.buildsrc.Libs.Kotlin.stdlib)
-    implementation(co.ruizhang.buildsrc.Libs.Coroutines.android)
+    implementation(Libs.Kotlin.stdlib)
+    implementation(Libs.Coroutines.android)
 
-    implementation(co.ruizhang.buildsrc.Libs.Hilt.hilt)
-    kapt(co.ruizhang.buildsrc.Libs.Hilt.androidCompiler)
-    kapt(co.ruizhang.buildsrc.Libs.Hilt.compiler)
-    implementation(co.ruizhang.buildsrc.Libs.Hilt.viewModel)
-    implementation(co.ruizhang.buildsrc.Libs.Hilt.composeNavigation)
+    implementation(Libs.Hilt.hilt)
+    kapt(Libs.Hilt.androidCompiler)
+    kapt(Libs.Hilt.compiler)
+    implementation(Libs.Hilt.viewModel)
+    implementation(Libs.Hilt.composeNavigation)
 
-    implementation(co.ruizhang.buildsrc.Libs.AndroidX.coreKtx)
-    implementation(co.ruizhang.buildsrc.Libs.AndroidX.navigation)
-    implementation(co.ruizhang.buildsrc.Libs.AndroidX.Activity.activityCompose)
-    implementation(co.ruizhang.buildsrc.Libs.AndroidX.ConstraintLayout.constraintLayoutCompose)
+    implementation(Libs.Kotlinx.datetime)
+    
+    implementation(Libs.AndroidX.coreKtx)
+    implementation(Libs.AndroidX.navigation)
+    implementation(Libs.AndroidX.Activity.activityCompose)
+    implementation(Libs.AndroidX.ConstraintLayout.constraintLayoutCompose)
 
     //region compose
-    implementation(co.ruizhang.buildsrc.Libs.AndroidX.Compose.runtime)
-    implementation(co.ruizhang.buildsrc.Libs.AndroidX.Compose.foundation)
-    implementation(co.ruizhang.buildsrc.Libs.AndroidX.Compose.layout)
-    implementation(co.ruizhang.buildsrc.Libs.AndroidX.Compose.ui)
-    implementation(co.ruizhang.buildsrc.Libs.AndroidX.Compose.uiUtil)
-    implementation(co.ruizhang.buildsrc.Libs.AndroidX.Compose.viewModel)
-    implementation(co.ruizhang.buildsrc.Libs.AndroidX.Compose.liveData)
-    implementation(co.ruizhang.buildsrc.Libs.AndroidX.Compose.material)
-    implementation(co.ruizhang.buildsrc.Libs.AndroidX.Compose.animation)
-    implementation(co.ruizhang.buildsrc.Libs.AndroidX.Compose.iconsExtended)
-    implementation(co.ruizhang.buildsrc.Libs.AndroidX.Compose.tooling)
+    implementation(Libs.AndroidX.Compose.runtime)
+    implementation(Libs.AndroidX.Compose.foundation)
+    implementation(Libs.AndroidX.Compose.layout)
+    implementation(Libs.AndroidX.Compose.ui)
+    implementation(Libs.AndroidX.Compose.uiUtil)
+    implementation(Libs.AndroidX.Compose.viewModel)
+    implementation(Libs.AndroidX.Compose.liveData)
+    implementation(Libs.AndroidX.Compose.material)
+    implementation(Libs.AndroidX.Compose.animation)
+    implementation(Libs.AndroidX.Compose.iconsExtended)
+    implementation(Libs.AndroidX.Compose.tooling)
     //endregion
 
-    implementation(co.ruizhang.buildsrc.Libs.AndroidX.Lifecycle.liveDataKtx)
-    implementation(co.ruizhang.buildsrc.Libs.AndroidX.Lifecycle.runTime)
-    implementation(co.ruizhang.buildsrc.Libs.AndroidX.Lifecycle.viewModelKtx)
-    implementation(co.ruizhang.buildsrc.Libs.AndroidX.Lifecycle.extensions)
-    implementation(co.ruizhang.buildsrc.Libs.AndroidX.DataStore.preferences)
+    implementation(Libs.AndroidX.Lifecycle.liveDataKtx)
+    implementation(Libs.AndroidX.Lifecycle.runTime)
+    implementation(Libs.AndroidX.Lifecycle.viewModelKtx)
+    implementation(Libs.AndroidX.Lifecycle.extensions)
+    implementation(Libs.AndroidX.DataStore.preferences)
 
-    implementation(co.ruizhang.buildsrc.Libs.Accompanist.coil)
-    implementation(co.ruizhang.buildsrc.Libs.Accompanist.insets)
+    implementation(Libs.Accompanist.coil)
+    implementation(Libs.Accompanist.insets)
 
-    implementation(co.ruizhang.buildsrc.Libs.Retrofit.retrofit)
-    implementation(co.ruizhang.buildsrc.Libs.Retrofit.gson)
+    implementation(Libs.Retrofit.retrofit)
+    implementation(Libs.Retrofit.gson)
 
     //region room
-    implementation(co.ruizhang.buildsrc.Libs.Room.runtime)
-    annotationProcessor(co.ruizhang.buildsrc.Libs.Room.compiler)
-    kapt(co.ruizhang.buildsrc.Libs.Room.compiler)
-    implementation(co.ruizhang.buildsrc.Libs.Room.ktx)
+    implementation(Libs.Room.runtime)
+    annotationProcessor(Libs.Room.compiler)
+    kapt(Libs.Room.compiler)
+    implementation(Libs.Room.ktx)
     //endregion
 
     //region Test
-    testImplementation(co.ruizhang.buildsrc.Libs.JUnit.junit)
-    testImplementation(co.ruizhang.buildsrc.Libs.MockK.mockk)
-    testImplementation(co.ruizhang.buildsrc.Libs.Coroutines.test)
-    testImplementation(co.ruizhang.buildsrc.Libs.Hilt.test)
-    kaptTest(co.ruizhang.buildsrc.Libs.Hilt.test)
-    testImplementation(co.ruizhang.buildsrc.Libs.Arch.testing)
+    testImplementation(Libs.JUnit.junit)
+    testImplementation(Libs.MockK.mockk)
+    testImplementation(Libs.Coroutines.test)
+    testImplementation(Libs.Hilt.test)
+    kaptTest(Libs.Hilt.test)
+    testImplementation(Libs.Arch.testing)
 
-    androidTestImplementation(co.ruizhang.buildsrc.Libs.AndroidX.Activity.activityCompose)
-    androidTestImplementation(co.ruizhang.buildsrc.Libs.AndroidX.Test.core)
-    androidTestImplementation(co.ruizhang.buildsrc.Libs.AndroidX.Test.espressoCore)
-    androidTestImplementation(co.ruizhang.buildsrc.Libs.AndroidX.Test.rules)
-    androidTestImplementation(co.ruizhang.buildsrc.Libs.AndroidX.Test.Ext.junit)
-    androidTestImplementation(co.ruizhang.buildsrc.Libs.AndroidX.Compose.uiTest)
-    androidTestImplementation(co.ruizhang.buildsrc.Libs.Room.testing)
+    androidTestImplementation(Libs.AndroidX.Activity.activityCompose)
+    androidTestImplementation(Libs.AndroidX.Test.core)
+    androidTestImplementation(Libs.AndroidX.Test.espressoCore)
+    androidTestImplementation(Libs.AndroidX.Test.rules)
+    androidTestImplementation(Libs.AndroidX.Test.Ext.junit)
+    androidTestImplementation(Libs.AndroidX.Compose.uiTest)
+    androidTestImplementation(Libs.Room.testing)
     //endregion
 }
