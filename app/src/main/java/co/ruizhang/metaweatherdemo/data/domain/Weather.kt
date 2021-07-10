@@ -6,13 +6,13 @@ data class Weather(
     val id: Int,
     val weatherState: WeatherState,
     val windSpeed: Float, //mph
-    val applicable_date: LocalDate,
+    val applicableDate: LocalDate,
     val temperature: Int, //centigrade
     val airPressure: Float, //mbar
     val predictability: Int, //percentage
 )
 
-data class WeatherLocation(
+data class LocationWeatherData(
     val title: String,
     val woeid: Int,
     val consolidatedWeathers: List<Weather>,
