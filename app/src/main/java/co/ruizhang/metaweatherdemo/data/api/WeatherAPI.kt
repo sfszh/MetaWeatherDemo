@@ -24,7 +24,11 @@ data class WeatherApiModel(
     @Expose
     val applicable_date: String,
     @Expose
-    val temperature: Int, //centigrade
+    val min_temp: Float,
+    @Expose
+    val max_temp: Float,
+    @Expose
+    val the_temp: Float, //centigrade
     @Expose
     val air_pressure: Float, //mbar
     @Expose

@@ -1,6 +1,7 @@
 package co.ruizhang.metaweatherdemo.data.domain
 
-import kotlinx.datetime.LocalDate
+import java.time.LocalDate
+
 
 data class Weather(
     val id: Long,
@@ -8,6 +9,8 @@ data class Weather(
     val windSpeed: Float, //mph
     val applicableDate: LocalDate,
     val temperature: Int, //centigrade
+    val maxTemperature: Int,
+    val minTemperature:Int,
     val airPressure: Float, //mbar
     val predictability: Int, //percentage
 )

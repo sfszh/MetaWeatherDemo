@@ -8,9 +8,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import kotlinx.datetime.LocalDate
+import java.time.LocalDate
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 interface WeatherDataRepository {
     val weatherData: Flow<HashMap<Int, LocationWeatherData>> //woeid, LocationWeatherData
@@ -53,7 +53,9 @@ private fun WeatherApiModel.toDomain(): Weather {
         weatherState = weather_state_name.toWeatherState(),
         windSpeed = wind_speed,
         applicableDate = LocalDate.parse(applicable_date),
-        temperature = temperature,
+        temperature = the_temp.roundToInt(),
+        maxTemperature = max_temp.roundToInt(),
+        minTemperature = min_temp.roundToInt(),
         airPressure = air_pressure,
         predictability = predictability,
     )

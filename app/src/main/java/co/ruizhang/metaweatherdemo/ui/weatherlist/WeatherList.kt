@@ -94,13 +94,12 @@ fun LocationCard(
         ) {
             Text(text = location.title, style = MaterialTheme.typography.subtitle2)
             Text(
-                text = location.temperature.let { "$it \u2103" },
+                text = location.woeid.toString(),
                 style = MaterialTheme.typography.body2
             )
         }
     }
 }
-
 
 @Composable
 fun AddRepoButton(add: () -> Unit) {

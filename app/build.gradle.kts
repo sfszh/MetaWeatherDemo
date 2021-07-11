@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "co.ruizhang.metaweatherdemo"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 30
         versionCode = 1
         versionName = "1.0"

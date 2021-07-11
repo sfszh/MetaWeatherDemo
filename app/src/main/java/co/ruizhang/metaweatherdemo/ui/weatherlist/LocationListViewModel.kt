@@ -29,7 +29,6 @@ class LocationListViewModel @Inject constructor(repo: LocationRepository) :
             LocationViewData(
                 it.woeid,
                 it.title,
-                0
             )
         }
     }.asLiveData()
@@ -49,5 +48,4 @@ class LocationListViewModel @Inject constructor(repo: LocationRepository) :
 data class LocationViewData(
     val woeid: Int,
     val title: String,
-    val temperature: Int
 )
