@@ -16,31 +16,23 @@ import javax.inject.Inject
 class WeatherDetailViewModel @Inject constructor(val repo: WeatherDataRepository) : ViewModel() {
     private val getEvent = MutableSharedFlow<Int>(1)
 
-//    val viewData: LiveData<LocationWeatherData?> =
-//        getEvent
-//            .combine(repo.weatherData.onStart { emit(hashMapOf()) }) { woeid, weatherData ->
-//               return@combine weatherData[woeid]
-//            }
-//            .asLiveData()
-//            .onEach { (data, woeid) ->
-//                if (data == null) {
-//                    repo.update(woeid)
-//                }
-//                Napier.i("haha")
-//            }
-//            .map {
-//                it.first
-//            }.asLiveData()
-
-    val viewData: LiveData<LocationWeatherData?> =
-        repo.weatherData
-            .map {
-                it.values.firstOrNull()
+    val viewData: LiveData<LocationWeatherData?> = getEvent
+        .combine(repo.weatherData.onStart { emit(hashMapOf()) }) { woeid, weatherData ->
+            return@combine Pair(weatherData[woeid], woeid)
+        }
+        .onEach { (data, woeid) ->
+            if (data == null) {
+                repo.update(woeid)
             }
-            .asLiveData()
-
+        }
+        .map {
+            it.first
+        }.asLiveData()
 
     fun getWeather(woeid: Int) {
-        repo.update(44418)
+        viewModelScope.launch {
+            getEvent.emit(woeid)
+        }
+
     }
 }
