@@ -3,7 +3,7 @@ package co.ruizhang.metaweatherdemo.data.domain
 import kotlinx.datetime.LocalDate
 
 data class Weather(
-    val id: Int,
+    val id: Long,
     val weatherState: WeatherState,
     val windSpeed: Float, //mph
     val applicableDate: LocalDate,

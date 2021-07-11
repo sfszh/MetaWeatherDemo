@@ -3,11 +3,11 @@ package co.ruizhang.metaweatherdemo.data.domain
 import co.ruizhang.metaweatherdemo.data.api.LocationWeatherDataApiModel
 import co.ruizhang.metaweatherdemo.data.api.WeatherAPI
 import co.ruizhang.metaweatherdemo.data.api.WeatherApiModel
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.lastOrNull
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.LocalDate
 import javax.inject.Inject
 
 interface WeatherDataRepository {
@@ -17,21 +17,21 @@ interface WeatherDataRepository {
 
 
 class WeatherDataRepositoryImpl @Inject constructor(val api: WeatherAPI) : WeatherDataRepository {
-
-    private val weatherDataCache = MutableSharedFlow<HashMap<Int, LocationWeatherData>>(1)
+    private val weatherDataCache: HashMap<Int, LocationWeatherData> = hashMapOf()
+    private val _weatherData =
+        MutableSharedFlow<HashMap<Int, LocationWeatherData>>(1)
 
     override val weatherData: Flow<HashMap<Int, LocationWeatherData>>
-        get() = weatherDataCache
+        get() = _weatherData
 
     override suspend fun update(woeid: Int) {
         withContext(Dispatchers.IO) {
             try {
                 val domainModel = api.getWeather(woeid).body()!!.toDomain()
-                val existedData = weatherDataCache.lastOrNull() ?: hashMapOf()
-                existedData[domainModel.woeid] = domainModel
-                weatherDataCache.emit(existedData)
+                weatherDataCache[domainModel.woeid] = domainModel
+                _weatherData.emit(weatherDataCache)
             } catch (e: Exception) {
-                //todo add error handler
+                Napier.e(e.message ?: "")
             }
 
         }
@@ -51,7 +51,7 @@ private fun WeatherApiModel.toDomain(): Weather {
         id = id,
         weatherState = weather_state_name.toWeatherState(),
         windSpeed = wind_speed,
-        applicableDate = applicable_date,
+        applicableDate = LocalDate.parse(applicable_date),
         temperature = temperature,
         airPressure = air_pressure,
         predictability = predictability,

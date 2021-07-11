@@ -7,10 +7,7 @@ import androidx.lifecycle.viewModelScope
 import co.ruizhang.metaweatherdemo.data.domain.LocationWeatherData
 import co.ruizhang.metaweatherdemo.data.domain.WeatherDataRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,13 +16,14 @@ class WeatherDetailViewModel @Inject constructor(repo: WeatherDataRepository) : 
     private val getEvent = MutableSharedFlow<Int>(1)
 
     val viewData: LiveData<LocationWeatherData> =
-        getEvent.combine(repo.weatherData) { woeid, weatherData ->
-            val data = weatherData[woeid]
-            if (data == null) {
-                repo.update(woeid)
-            }
-            data
-        }.filterNotNull().asLiveData()
+        getEvent.distinctUntilChanged()
+            .combine(repo.weatherData.onStart { emit(hashMapOf()) }) { woeid, weatherData ->
+                val data = weatherData[woeid]
+                if (data == null) {
+                    repo.update(woeid)
+                }
+                data
+            }.filterNotNull().asLiveData()
 
 
     fun getWeather(woeid: Int) {

@@ -76,6 +76,10 @@ object Libs {
         const val test = "com.google.dagger:hilt-android-testing:$version"
         const val composeNavigation = "androidx.hilt:hilt-navigation-compose:1.0.0-alpha02"
     }
+    object Napier {
+        private const val version = "1.5.0"
+        const val  napier = "io.github.aakira:napier:$version"
+    }
 
     object AndroidX {
         const val coreKtx = "androidx.core:core-ktx:1.6.0"

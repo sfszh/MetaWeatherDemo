@@ -79,6 +79,8 @@ dependencies {
     implementation(Libs.AndroidX.Compose.tooling)
     //endregion
 
+    implementation(Libs.Napier.napier)
+
     implementation(Libs.AndroidX.Lifecycle.liveDataKtx)
     implementation(Libs.AndroidX.Lifecycle.runTime)
     implementation(Libs.AndroidX.Lifecycle.viewModelKtx)
