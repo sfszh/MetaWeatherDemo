@@ -6,11 +6,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import co.ruizhang.metaweatherdemo.MainDestinations.LOCATION_LIST
-import co.ruizhang.metaweatherdemo.ui.LocationUI
+import co.ruizhang.metaweatherdemo.MainDestinations.WEATHER_DETAIL
+import co.ruizhang.metaweatherdemo.MainDestinations.WEATHER_LOCATION_ID
+import co.ruizhang.metaweatherdemo.ui.weatherdetail.WeatherDetail
+import co.ruizhang.metaweatherdemo.ui.weatherlist.LocationUI
 
 object MainDestinations {
     const val LOCATION_LIST = "location_list"
-    const val WEATHER = "weather"
+    const val WEATHER_DETAIL = "weather_detail"
+    const val WEATHER_LOCATION_ID = "weather_location_id"
+
 }
 
 @Composable
@@ -24,7 +29,12 @@ fun NavGraph(
     ) {
 
         composable(LOCATION_LIST) {
-            LocationUI(selectLocation = {}, addLocation = {})
+            LocationUI(selectLocation = {navController.navigate("${WEATHER_DETAIL}/$it") }, addLocation = {})
+        }
+
+        composable("${WEATHER_DETAIL}/{${WEATHER_LOCATION_ID}}") { backStackEntry ->
+            val woeid = backStackEntry.arguments?.getString(WEATHER_LOCATION_ID)?.toInt() ?: 0
+            WeatherDetail(woeid, back = { navController.popBackStack() })
         }
     }
 }

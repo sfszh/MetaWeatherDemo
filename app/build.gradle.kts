@@ -45,7 +45,6 @@ android {
     }
     composeOptions {
         kotlinCompilerExtensionVersion = Libs.AndroidX.Compose.version
-        kotlinCompilerVersion = "1.4.32"
     }
 }
 dependencies {

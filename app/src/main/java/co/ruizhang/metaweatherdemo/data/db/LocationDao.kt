@@ -7,10 +7,10 @@ import kotlinx.coroutines.flow.Flow
 interface LocationDao {
     @Query("SELECT * FROM weather_location_table")
     fun getLocations() : Flow<List<WeatherLocationDbModel>>
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertLocations(repos: List<WeatherLocationDbModel>)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertLocation(vararg repos: WeatherLocationDbModel)
 
     @Delete

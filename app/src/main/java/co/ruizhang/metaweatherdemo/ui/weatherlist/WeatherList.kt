@@ -1,4 +1,4 @@
-package co.ruizhang.metaweatherdemo.ui
+package co.ruizhang.metaweatherdemo.ui.weatherlist
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -18,8 +18,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import co.ruizhang.metaweatherdemo.R
 import co.ruizhang.metaweatherdemo.data.domain.MOCK_LOCATION_VIEWDATA
 import co.ruizhang.metaweatherdemo.ui.theme.MetaWeatherDemoTheme
-import co.ruizhang.metaweatherdemo.ui.weatherlist.LocationListViewModel
-import co.ruizhang.metaweatherdemo.ui.weatherlist.LocationViewData
 
 @Composable
 fun LocationUI(
@@ -32,8 +30,8 @@ fun LocationUI(
     LocationUI(
         modifier,
         dm,
-        {},
-        {}
+        selectLocation,
+        addLocation
     )
 }
 

@@ -19,7 +19,7 @@ data class LocationWeatherData(
 )
 
 enum class WeatherState(val stateName: String, val stateAbbr: String) {
-    SNOW("snow", "sn"),
+    SNOW("Snow", "sn"),
     SLEET("Sleet", "sl"),
     HAIL("Hail", "h"),
     THUNDERSTORM("Thunderstorm", "t"),
@@ -29,4 +29,9 @@ enum class WeatherState(val stateName: String, val stateAbbr: String) {
     HEAVY_CLOUD("Heavy Cloud", "hc"),
     LIGHT_CLOUD("Light Cloud", "lc"),
     CLEAR("Clear", "c");
+
+
+    fun getImageUrl() : String {
+        return "https://www.metaweather.com/static/img/weather/png/${stateAbbr}/sn.png"
+    }
 }

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Meta Weather Demo</string>
+    <string name="content_description_back">go back</string>
 </resources>
