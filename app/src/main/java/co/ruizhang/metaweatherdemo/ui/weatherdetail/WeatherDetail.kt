@@ -2,6 +2,8 @@ package co.ruizhang.metaweatherdemo.ui.weatherdetail
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -33,7 +35,7 @@ fun WeatherDetail(
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text(text = "City Title") },
+                    title = { Text(text = viewData.value?.title ?: "") },
                     navigationIcon = {
                         IconButton(onClick = back) {
                             Icon(
@@ -45,7 +47,10 @@ fun WeatherDetail(
                 )
             }
         ) { innerPadding ->
-            Column {
+            Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                viewData.value?.consolidatedWeathers?.firstOrNull()?.let {
+                    MainWeatherCard(viewData = it.toMainView())
+                }
                 viewData.value?.consolidatedWeathers?.forEach {
                     DailyWeatherCard(it.toViewData())
                 }
@@ -59,12 +64,13 @@ fun WeatherDetail(
 fun DailyWeatherCard(viewData: DailyWeatherViewData, modifier: Modifier = Modifier) {
     Card(
         elevation = 2.dp,
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(8.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.padding(8.dp)
         ) {
             Text(text = viewData.date)
             Image(
@@ -80,6 +86,23 @@ fun DailyWeatherCard(viewData: DailyWeatherViewData, modifier: Modifier = Modifi
 
     }
 }
+
+@Composable
+fun MainWeatherCard(viewData: MainWeatherViewData, modifier: Modifier = Modifier) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Text(text = viewData.temperature, style = MaterialTheme.typography.h1)
+        Column {
+            Text(text = "℃", style = MaterialTheme.typography.h6)
+            Text(text = viewData.weatherName, style = MaterialTheme.typography.h6)
+        }
+    }
+
+}
+
+data class MainWeatherViewData(
+    val temperature: String,
+    val weatherName: String,
+)
 
 data class DailyWeatherViewData(
     val date: String,
@@ -102,6 +125,9 @@ private fun Weather.toViewData(): DailyWeatherViewData {
     return DailyWeatherViewData(date, url, contentDescription, minMax)
 }
 
+private fun Weather.toMainView(): MainWeatherViewData {
+    return MainWeatherViewData(this.temperature.toString(), this.weatherState.stateName)
+}
 
 @Preview("Daily Weather Card Preview")
 @Composable
@@ -116,6 +142,18 @@ fun DailyWeatherCardPreview() {
 
     MetaWeatherDemoTheme {
         DailyWeatherCard(mockData)
+    }
+}
+
+@Preview("Main Weather Card Preview")
+@Composable
+fun MainWeatherCardPreview() {
+    val mockData = MainWeatherViewData(
+        "30",
+        "Cloudy"
+    )
+    MetaWeatherDemoTheme {
+        MainWeatherCard(mockData)
     }
 }
 
