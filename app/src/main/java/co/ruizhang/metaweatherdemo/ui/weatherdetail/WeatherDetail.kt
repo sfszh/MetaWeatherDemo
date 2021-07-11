@@ -28,6 +28,7 @@ fun WeatherDetail(
     vm: WeatherDetailViewModel = hiltViewModel(),
     modifier: Modifier = Modifier, // leave it for now
 ) {
+
     val viewData = vm.viewData.observeAsState()
     vm.getWeather(woeid)
     MetaWeatherDemoTheme {
@@ -50,7 +51,11 @@ fun WeatherDetail(
             val vd = DailyWeatherViewData(
                 state?.getImageUrl() ?: "",
                 state?.stateName ?: "")
-            DailyWeatherCard(vd)
+            Column {
+                Text("hahahahah")
+                DailyWeatherCard(vd)
+
+            }
         }
     }
 }

@@ -4,28 +4,29 @@ import co.ruizhang.metaweatherdemo.data.api.LocationWeatherDataApiModel
 import co.ruizhang.metaweatherdemo.data.api.WeatherAPI
 import co.ruizhang.metaweatherdemo.data.api.WeatherApiModel
 import io.github.aakira.napier.Napier
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.LocalDate
 import javax.inject.Inject
 
 interface WeatherDataRepository {
     val weatherData: Flow<HashMap<Int, LocationWeatherData>> //woeid, LocationWeatherData
-    suspend fun update(woeid: Int)
+    fun update(woeid: Int)
 }
 
 
 class WeatherDataRepositoryImpl @Inject constructor(val api: WeatherAPI) : WeatherDataRepository {
     private val weatherDataCache: HashMap<Int, LocationWeatherData> = hashMapOf()
-    private val _weatherData =
-        MutableSharedFlow<HashMap<Int, LocationWeatherData>>(1)
+    private val _weatherData : MutableStateFlow<HashMap<Int, LocationWeatherData>> =
+        MutableStateFlow(hashMapOf())
 
-    override val weatherData: Flow<HashMap<Int, LocationWeatherData>>
-        get() = _weatherData
+    override val weatherData: Flow<HashMap<Int, LocationWeatherData>> = _weatherData
 
-    override suspend fun update(woeid: Int) {
-        withContext(Dispatchers.IO) {
+    override fun update(woeid: Int) {
+        CoroutineScope(Dispatchers.IO).launch {
             try {
                 val domainModel = api.getWeather(woeid).body()!!.toDomain()
                 weatherDataCache[domainModel.woeid] = domainModel
