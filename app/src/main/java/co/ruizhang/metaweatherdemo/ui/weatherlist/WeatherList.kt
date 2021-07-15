@@ -79,9 +79,9 @@ private fun LocationUI(
                 }
                 is ViewResultData.Error -> {
                     Snackbar(action = {
-                        Text(text = "OK", style = TextStyle(color = MaterialTheme.colors.secondary))
+                        Text(text = stringResource(id = R.string.okay), style = TextStyle(color = MaterialTheme.colors.secondary))
                     }) {
-                        Text(text = "Loading Error")
+                        Text(text = stringResource(id = R.string.loading_error))
                     }
                 }
                 is ViewResultData.Loading -> {

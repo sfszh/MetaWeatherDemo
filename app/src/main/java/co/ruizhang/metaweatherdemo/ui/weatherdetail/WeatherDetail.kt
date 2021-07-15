@@ -12,6 +12,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -19,9 +20,7 @@ import co.ruizhang.metaweatherdemo.ui.theme.MetaWeatherDemoTheme
 import com.google.accompanist.coil.rememberCoilPainter
 import co.ruizhang.metaweatherdemo.R
 import co.ruizhang.metaweatherdemo.data.domain.Weather
-import com.google.accompanist.placeholder.PlaceholderHighlight
-import com.google.accompanist.placeholder.material.fade
-import com.google.accompanist.placeholder.material.placeholder
+import co.ruizhang.metaweatherdemo.ui.ViewResultData
 import java.time.format.DateTimeFormatter
 
 @Composable
@@ -32,13 +31,14 @@ fun WeatherDetail(
     modifier: Modifier = Modifier, // leave it for now
 ) {
 
-    val viewData = vm.viewData.observeAsState()
+    val viewDataState = vm.viewData.observeAsState()
+    val title: String = viewDataState.value?.data?.title ?: ""
     vm.getWeather(woeid)
     MetaWeatherDemoTheme {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text(text = viewData.value?.title ?: "") },
+                    title = { Text(text = title) },
                     navigationIcon = {
                         IconButton(onClick = back) {
                             Icon(
@@ -50,14 +50,41 @@ fun WeatherDetail(
                 )
             }
         ) { innerPadding ->
-            Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                viewData.value?.consolidatedWeathers?.firstOrNull()?.let {
-                    MainWeatherCard(viewData = it.toMainView())
+            val viewData = viewDataState.value
+            when(viewData) {
+                is ViewResultData.Success -> {
+                    val weathers = viewData.data?.consolidatedWeathers
+                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                        weathers?.firstOrNull()?.let {
+                            MainWeatherCard(viewData = it.toMainView())
+                        }
+                        weathers?.forEach {
+                            DailyWeatherCard(it.toViewData())
+                        }
+                    }
                 }
-                viewData.value?.consolidatedWeathers?.forEach {
-                    DailyWeatherCard(it.toViewData())
+                is ViewResultData.Loading -> {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ){
+                        CircularProgressIndicator(
+                            modifier = Modifier.wrapContentWidth(
+                                Alignment.CenterHorizontally
+                            )
+                        )
+                    }
+                }
+                is ViewResultData.Error -> {
+                    Snackbar(action = {
+                        Text(text = stringResource(id = R.string.okay), style = TextStyle(color = MaterialTheme.colors.secondary))
+                    }) {
+                        Text(text = stringResource(id = R.string.loading_error))
+                    }
                 }
             }
+
         }
     }
 }
