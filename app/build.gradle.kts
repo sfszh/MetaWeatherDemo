@@ -89,6 +89,8 @@ dependencies {
 
     implementation(Libs.Accompanist.coil)
     implementation(Libs.Accompanist.insets)
+    implementation(Libs.Accompanist.placeholder)
+    implementation(Libs.Accompanist.swipeRefresh)
 
     implementation(Libs.Retrofit.retrofit)
     implementation(Libs.Retrofit.gson)

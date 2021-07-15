@@ -6,10 +6,12 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import co.ruizhang.metaweatherdemo.data.domain.LocationRepository
 import co.ruizhang.metaweatherdemo.data.domain.WeatherLocation
+import co.ruizhang.metaweatherdemo.ui.ViewResultData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,14 +26,23 @@ class LocationListViewModel @Inject constructor(repo: LocationRepository) :
         }
     }
 
-    val locations: LiveData<List<LocationViewData>> = repo.locations.map { list ->
-        list.map {
-            LocationViewData(
-                it.woeid,
-                it.title,
-            )
+    val locations: LiveData<ViewResultData<List<LocationViewData>>> = repo.locations
+        .map { list ->
+            val viewDataList = list.map {
+                LocationViewData(
+                    it.woeid,
+                    it.title,
+                )
+            }
+            return@map ViewResultData.Success(viewDataList) as ViewResultData<List<LocationViewData>>
         }
-    }.asLiveData()
+        .onStart {
+            emit(ViewResultData.Loading(null))
+        }
+        .catch { throwable ->
+            emit(ViewResultData.Error(null, throwable))
+        }
+        .asLiveData()
 
     companion object {
         private val PREFILLED_LOCATIONS = listOf(

@@ -4,19 +4,23 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import co.ruizhang.metaweatherdemo.R
 import co.ruizhang.metaweatherdemo.data.domain.MOCK_LOCATION_VIEWDATA
+import co.ruizhang.metaweatherdemo.ui.ViewResultData
 import co.ruizhang.metaweatherdemo.ui.theme.MetaWeatherDemoTheme
 
 @Composable
@@ -38,7 +42,7 @@ fun LocationUI(
 @Composable
 private fun LocationUI(
     modifier: Modifier = Modifier,
-    locations: State<List<LocationViewData>?>,
+    dataState: State<ViewResultData<List<LocationViewData>>?>,
     selectLocation: (Int) -> Unit,
     addLocation: () -> Unit
 ) {
@@ -55,17 +59,41 @@ private fun LocationUI(
                 )
             }
         ) { _ ->
-            LazyColumn(
-                contentPadding = PaddingValues(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = modifier
-            ) {
-                locations.value?.let {
-                    items(it) { location ->
-                        LocationCard(
-                            location = location,
-                            onClick = { selectLocation(location.woeid)},
-                            modifier = modifier
+            when(dataState.value) {
+                is ViewResultData.Success -> {
+                    LazyColumn(
+                        contentPadding = PaddingValues(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = modifier
+                    ) {
+                        dataState.value?.data?.let {
+                            items(it) { location ->
+                                LocationCard(
+                                    location = location,
+                                    onClick = { selectLocation(location.woeid) },
+                                    modifier = modifier
+                                )
+                            }
+                        }
+                    }
+                }
+                is ViewResultData.Error -> {
+                    Snackbar(action = {
+                        Text(text = "OK", style = TextStyle(color = MaterialTheme.colors.secondary))
+                    }) {
+                        Text(text = "Loading Error")
+                    }
+                }
+                is ViewResultData.Loading -> {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ){
+                        CircularProgressIndicator(
+                            modifier = Modifier.wrapContentWidth(
+                                Alignment.CenterHorizontally
+                            )
                         )
                     }
                 }
@@ -73,7 +101,6 @@ private fun LocationUI(
         }
     }
 }
-
 
 
 @Composable
@@ -115,7 +142,7 @@ fun AddRepoButton(add: () -> Unit) {
 @Composable
 fun LocationUIPreview() {
     LocationUI(
-        locations = remember { mutableStateOf(MOCK_LOCATION_VIEWDATA) },
+        dataState = remember { mutableStateOf(ViewResultData.Success(MOCK_LOCATION_VIEWDATA)) },
         selectLocation = {},
         addLocation = {})
 }

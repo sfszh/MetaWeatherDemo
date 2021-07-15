@@ -1,4 +1,3 @@
-
 package co.ruizhang.buildsrc
 
 object Versions {
@@ -12,6 +11,9 @@ object Libs {
         const val version = "0.13.0"
         const val coil = "com.google.accompanist:accompanist-coil:$version"
         const val insets = "com.google.accompanist:accompanist-insets:$version"
+        const val placeholder = "com.google.accompanist:accompanist-placeholder-material:$version"
+        const val swipeRefresh = "com.google.accompanist:accompanist-swiperefresh:$version"
+
     }
 
     object Arch {
@@ -76,9 +78,10 @@ object Libs {
         const val test = "com.google.dagger:hilt-android-testing:$version"
         const val composeNavigation = "androidx.hilt:hilt-navigation-compose:1.0.0-alpha02"
     }
+
     object Napier {
         private const val version = "1.5.0"
-        const val  napier = "io.github.aakira:napier:$version"
+        const val napier = "io.github.aakira:napier:$version"
     }
 
     object AndroidX {
@@ -111,7 +114,7 @@ object Libs {
             private const val version = "2.4.0-alpha02"
             const val runTime = "androidx.lifecycle:lifecycle-runtime:$version"
             const val liveDataKtx = "androidx.lifecycle:lifecycle-livedata-ktx:$version"
-            const val extensions= "androidx.lifecycle:lifecycle-extensions:2.2.0"
+            const val extensions = "androidx.lifecycle:lifecycle-extensions:2.2.0"
             const val viewModelKtx = "androidx.lifecycle:lifecycle-viewmodel-ktx:$version"
 
         }
@@ -120,8 +123,9 @@ object Libs {
             const val constraintLayoutCompose =
                 "androidx.constraintlayout:constraintlayout-compose:1.0.0-alpha05"
         }
+
         object DataStore {
-            private const val version =  "1.0.0-beta01"
+            private const val version = "1.0.0-beta01"
             const val preferences = "androidx.datastore:datastore-preferences:$version"
         }
 

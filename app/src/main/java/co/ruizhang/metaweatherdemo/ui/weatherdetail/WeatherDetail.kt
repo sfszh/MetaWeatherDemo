@@ -19,6 +19,9 @@ import co.ruizhang.metaweatherdemo.ui.theme.MetaWeatherDemoTheme
 import com.google.accompanist.coil.rememberCoilPainter
 import co.ruizhang.metaweatherdemo.R
 import co.ruizhang.metaweatherdemo.data.domain.Weather
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.fade
+import com.google.accompanist.placeholder.material.placeholder
 import java.time.format.DateTimeFormatter
 
 @Composable
@@ -71,8 +74,12 @@ fun DailyWeatherCard(viewData: DailyWeatherViewData, modifier: Modifier = Modifi
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .padding(8.dp)
         ) {
-            Text(text = viewData.date)
+            Text(
+                text = viewData.date, modifier = Modifier
+            )
             Image(
                 painter = rememberCoilPainter(viewData.imageUrl),
                 contentDescription = viewData.weatherDescription,
@@ -81,7 +88,9 @@ fun DailyWeatherCard(viewData: DailyWeatherViewData, modifier: Modifier = Modifi
                     .height(64.dp)
                     .wrapContentWidth(Alignment.CenterHorizontally)
             )
-            Text(text = viewData.maxMinTemp)
+            Text(
+                text = viewData.maxMinTemp, modifier = Modifier
+            )
         }
 
     }
