@@ -17,7 +17,7 @@ import javax.inject.Inject
 class WeatherDetailViewModel @Inject constructor(val repo: WeatherDataRepository) : ViewModel() {
     private val getEvent = MutableSharedFlow<Int>(1)
 
-    val viewData: LiveData<ViewResultData<LocationWeatherData>> = getEvent
+    val viewData: LiveData<ViewResultData<LocationWeatherData>> = getEvent.distinctUntilChanged()
         .combine(repo.weatherData) { woeid, weatherData ->
             return@combine Pair(weatherData[woeid], woeid)
         }
