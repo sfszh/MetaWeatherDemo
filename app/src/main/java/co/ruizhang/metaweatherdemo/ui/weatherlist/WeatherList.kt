@@ -4,20 +4,18 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import co.ruizhang.metaweatherdemo.R
 import co.ruizhang.metaweatherdemo.data.domain.MOCK_LOCATION_VIEWDATA
 import co.ruizhang.metaweatherdemo.ui.ViewResultData
@@ -30,10 +28,15 @@ fun LocationUI(
     selectLocation: (Int) -> Unit,
     addLocation: () -> Unit
 ) {
-    val dm = vm.locations.observeAsState()
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val viewDataFlowLifecycleAware = remember(vm.locations, lifecycleOwner) {
+        vm.locations.flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+    }
+
+    val viewDataState = viewDataFlowLifecycleAware.collectAsState(null)
     LocationUI(
         modifier,
-        dm,
+        viewDataState,
         selectLocation,
         addLocation
     )

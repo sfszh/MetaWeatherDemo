@@ -8,19 +8,23 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import co.ruizhang.metaweatherdemo.ui.theme.MetaWeatherDemoTheme
-import com.google.accompanist.coil.rememberCoilPainter
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import co.ruizhang.metaweatherdemo.R
 import co.ruizhang.metaweatherdemo.data.domain.Weather
 import co.ruizhang.metaweatherdemo.ui.ViewResultData
+import co.ruizhang.metaweatherdemo.ui.theme.MetaWeatherDemoTheme
+import com.google.accompanist.coil.rememberCoilPainter
 import java.time.format.DateTimeFormatter
 
 @Composable
@@ -30,8 +34,12 @@ fun WeatherDetail(
     vm: WeatherDetailViewModel = hiltViewModel(),
     modifier: Modifier = Modifier, // leave it for now
 ) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val viewDataFlowLifecycleAware = remember(vm.viewData, lifecycleOwner) {
+        vm.viewData.flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+    }
 
-    val viewDataState = vm.viewData.observeAsState()
+    val viewDataState = viewDataFlowLifecycleAware.collectAsState(null)
     val title: String = viewDataState.value?.data?.title ?: ""
     vm.getWeather(woeid)
     MetaWeatherDemoTheme {

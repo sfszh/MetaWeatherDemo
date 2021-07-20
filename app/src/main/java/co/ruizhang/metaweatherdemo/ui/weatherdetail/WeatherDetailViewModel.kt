@@ -1,14 +1,11 @@
 package co.ruizhang.metaweatherdemo.ui.weatherdetail
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import co.ruizhang.metaweatherdemo.data.domain.LocationWeatherData
 import co.ruizhang.metaweatherdemo.data.domain.WeatherDataRepository
 import co.ruizhang.metaweatherdemo.ui.ViewResultData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,7 +14,7 @@ import javax.inject.Inject
 class WeatherDetailViewModel @Inject constructor(val repo: WeatherDataRepository) : ViewModel() {
     private val getEvent = MutableSharedFlow<Int>(1)
 
-    val viewData: LiveData<ViewResultData<LocationWeatherData>> = getEvent.distinctUntilChanged()
+    val viewData: StateFlow<ViewResultData<LocationWeatherData>> = getEvent.distinctUntilChanged()
         .combine(repo.weatherData) { woeid, weatherData ->
             return@combine Pair(weatherData[woeid], woeid)
         }
@@ -32,13 +29,14 @@ class WeatherDetailViewModel @Inject constructor(val repo: WeatherDataRepository
         .map {
             ViewResultData.Success(it.first) as ViewResultData<LocationWeatherData>
         }
-        .onStart {
-            emit(ViewResultData.Loading(null))
-        }
         .catch { throwable ->
             emit(ViewResultData.Error(null, throwable))
         }
-        .asLiveData()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = ViewResultData.Loading(null)
+        )
 
     fun getWeather(woeid: Int) {
         viewModelScope.launch {

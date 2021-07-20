@@ -26,7 +26,7 @@ class LocationListViewModel @Inject constructor(repo: LocationRepository) :
         }
     }
 
-    val locations: LiveData<ViewResultData<List<LocationViewData>>> = repo.locations
+    val locations: StateFlow<ViewResultData<List<LocationViewData>>> = repo.locations
         .map { list ->
             val viewDataList = list.map {
                 LocationViewData(
@@ -36,13 +36,14 @@ class LocationListViewModel @Inject constructor(repo: LocationRepository) :
             }
             return@map ViewResultData.Success(viewDataList) as ViewResultData<List<LocationViewData>>
         }
-        .onStart {
-            emit(ViewResultData.Loading(null))
-        }
         .catch { throwable ->
             emit(ViewResultData.Error(null, throwable))
         }
-        .asLiveData()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = ViewResultData.Loading(null)
+        )
 
     companion object {
         private val PREFILLED_LOCATIONS = listOf(
