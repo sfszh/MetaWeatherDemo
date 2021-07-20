@@ -83,6 +83,7 @@ dependencies {
 
     implementation(Libs.AndroidX.Lifecycle.liveDataKtx)
     implementation(Libs.AndroidX.Lifecycle.runTime)
+    implementation(Libs.AndroidX.Lifecycle.runTimeKtx)
     implementation(Libs.AndroidX.Lifecycle.viewModelKtx)
     implementation(Libs.AndroidX.Lifecycle.extensions)
     implementation(Libs.AndroidX.DataStore.preferences)
