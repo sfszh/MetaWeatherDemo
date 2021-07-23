@@ -4,6 +4,7 @@ import co.ruizhang.metaweatherdemo.data.api.LocationWeatherDataApiModel
 import co.ruizhang.metaweatherdemo.data.api.WeatherAPI
 import co.ruizhang.metaweatherdemo.data.api.WeatherApiModel
 import io.github.aakira.napier.Napier
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -13,29 +14,27 @@ import javax.inject.Inject
 import kotlin.math.roundToInt
 
 interface WeatherDataRepository {
-    val weatherData: Flow<HashMap<Int, LocationWeatherData>> //woeid, LocationWeatherData
-    fun update(woeid: Int)
+    fun getWeatherData(woeid: Int): Flow<LocationWeatherData>
 }
 
 
-class WeatherDataRepositoryImpl @Inject constructor(val api: WeatherAPI) : WeatherDataRepository {
+class WeatherDataRepositoryImpl @Inject constructor(
+    val api: WeatherAPI,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+) : WeatherDataRepository {
     private val weatherDataCache: HashMap<Int, LocationWeatherData> = hashMapOf()
-    private val _weatherData : MutableStateFlow<HashMap<Int, LocationWeatherData>> =
-        MutableStateFlow(hashMapOf())
 
-    override val weatherData: Flow<HashMap<Int, LocationWeatherData>> = _weatherData
-
-    override fun update(woeid: Int) {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
+    override fun getWeatherData(woeid: Int): Flow<LocationWeatherData> {
+        return flow {
+            val cachedData = if (weatherDataCache.contains(woeid)) {
+                weatherDataCache[woeid]!!
+            } else {
                 val domainModel = api.getWeather(woeid).body()!!.toDomain()
                 weatherDataCache[domainModel.woeid] = domainModel
-                _weatherData.emit(weatherDataCache)
-            } catch (e: Exception) {
-                Napier.e(e.message ?: "")
+                domainModel
             }
-
-        }
+            emit(cachedData)
+        }.flowOn(dispatcher)
     }
 }
 
