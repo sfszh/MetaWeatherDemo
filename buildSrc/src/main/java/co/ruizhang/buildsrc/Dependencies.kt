@@ -39,6 +39,8 @@ object Libs {
         private const val version = "2.9.0"
         const val retrofit = "com.squareup.retrofit2:retrofit:$version"
         const val gson = "com.squareup.retrofit2:converter-gson:$version"
+        const val mockWebServer = "com.squareup.okhttp3:mockwebserver:4.9.1"
+
     }
 
     object Room {

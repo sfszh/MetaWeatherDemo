@@ -4,6 +4,7 @@ import co.ruizhang.metaweatherdemo.data.api.WeatherAPI
 import co.ruizhang.metaweatherdemo.data.api.WeatherLocationApiModel
 import co.ruizhang.metaweatherdemo.data.db.LocationDao
 import co.ruizhang.metaweatherdemo.data.db.WeatherLocationDbModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -17,7 +18,8 @@ interface LocationRepository {
 
 class LocationRepositoryImpl @Inject constructor(
     private val api: WeatherAPI,
-    private val dao: LocationDao
+    private val dao: LocationDao,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : LocationRepository {
     override val locations: Flow<List<WeatherLocation>>
         get() = dao.getLocations().map { list ->
@@ -25,7 +27,7 @@ class LocationRepositoryImpl @Inject constructor(
         }
 
     override suspend fun searchLocation(title: String) {
-        return withContext(Dispatchers.IO) {
+        return withContext(dispatcher) {
             val dbModels = try {
                 api.searchLocation(title).body()?.map{it.toDbModel() }
             } catch (e: Exception) {

@@ -110,6 +110,7 @@ dependencies {
     testImplementation(Libs.Hilt.test)
     kaptTest(Libs.Hilt.test)
     testImplementation(Libs.Arch.testing)
+    testImplementation(Libs.Retrofit.mockWebServer)
 
     androidTestImplementation(Libs.AndroidX.Activity.activityCompose)
     androidTestImplementation(Libs.AndroidX.Test.core)
